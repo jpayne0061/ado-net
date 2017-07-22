@@ -1,0 +1,6 @@
+C:\Users\Administrator\Source\Projects\console_with_db\console_with_db\bin\Debug\console_with_db.exe.config
+C:\Users\Administrator\Source\Projects\console_with_db\console_with_db\bin\Debug\console_with_db.exe
+C:\Users\Administrator\Source\Projects\console_with_db\console_with_db\bin\Debug\console_with_db.pdb
+C:\Users\Administrator\Source\Projects\console_with_db\console_with_db\obj\Debug\console_with_db.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Source\Projects\console_with_db\console_with_db\obj\Debug\console_with_db.exe
+C:\Users\Administrator\Source\Projects\console_with_db\console_with_db\obj\Debug\console_with_db.pdb
