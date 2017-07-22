@@ -157,7 +157,6 @@ namespace console_with_db
                 }
             }
 
-
         }
 
         public static void UpdatePerson(SqlConnection conn)
@@ -178,6 +177,8 @@ namespace console_with_db
             var commandResult = updateCommand.ExecuteScalar();
 
         }
+
+
 
 
     }
