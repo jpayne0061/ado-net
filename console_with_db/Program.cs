@@ -16,7 +16,7 @@ namespace console_with_db
             while (operation != 0)
             {
                 Console.WriteLine("What operation would you like to perform? \r\n");
-                Console.WriteLine("Add Person: 1 \r\n Read Person: 2 \r\n Update Person: 3 \r\n Delete Person: 4 ");
+                Console.WriteLine("Add Person: 1 \r\n Read Person: 2 \r\n Update Person: 3 \r\n Delete Person: 4 \r\n Assign Task: 5 \r\n List Tasks: 6");
 
                 operation = Int32.Parse(Console.ReadLine());
 
@@ -34,6 +34,13 @@ namespace console_with_db
                     case 4:
                         CrudHelpers.SqlHelper(CrudHelpers.DeletePerson);
                         break;
+                    case 5:
+                        CrudHelpers.SqlHelper(CrudHelpers.CreateTask);
+                        break;
+                    case 6:
+                        CrudHelpers.SqlHelper(CrudHelpers.ListTasks);
+                        break;
+
                 }
 
             }

@@ -12,6 +12,42 @@ namespace console_with_db
     {
         public delegate void CrudOperation(SqlConnection conn);
 
+
+        public static void SqlHelper(CrudOperation operation)
+        {
+            using (SqlConnection conn = new SqlConnection())
+            {
+                conn.ConnectionString = "Server=JESS_COMPUTER\\SQLEXPRESS;Database=firstDB;Trusted_Connection=true";
+                conn.Open();
+
+                operation(conn);
+            }
+        }
+
+        public static void CreateTask(SqlConnection conn)
+        {
+            Console.WriteLine("Enter id of Task Assigner: ");
+            string AssignerId = Console.ReadLine();
+
+            Console.WriteLine("Enter id of person to complete task: ");
+            string TaskerId = Console.ReadLine();
+
+            Console.WriteLine("Please write description");
+            string description = Console.ReadLine();
+
+            DateTime dt = DateTime.Now;
+
+            SqlCommand insertCommand = new SqlCommand("INSERT INTO dbo.Tasks (Description, Created, FK_Person_AssignedTO, FK_Person_Assigner) VALUES (@0, @1, @2, @3)", conn);
+
+            insertCommand.Parameters.Add(new SqlParameter("0", description));
+            insertCommand.Parameters.Add(new SqlParameter("1", dt));
+            insertCommand.Parameters.Add(new SqlParameter("2", TaskerId));
+            insertCommand.Parameters.Add(new SqlParameter("3", AssignerId));
+
+            insertCommand.ExecuteNonQuery();
+
+        }
+
         public static void InsertPerson(SqlConnection conn)
         {
             Person person = AddEditPerson();
@@ -37,17 +73,6 @@ namespace console_with_db
 
         }
 
-
-        public static void SqlHelper(CrudOperation operation)
-        {
-            using (SqlConnection conn = new SqlConnection())
-            {
-                conn.ConnectionString = "Server=JESS_COMPUTER\\SQLEXPRESS;Database=firstDB;Trusted_Connection=true";
-                conn.Open();
-
-                operation(conn);
-            }
-        }
 
         public static Person AddEditPerson()
         {
@@ -110,6 +135,28 @@ namespace console_with_db
                     Console.ReadLine();
                 }
             }
+
+        }
+
+        public static void ListTasks(SqlConnection conn)
+        {
+            Console.WriteLine("Enter id of person you for whom you wish to list tasks: ");
+            int id = Int32.Parse(Console.ReadLine());
+            SqlCommand command = new SqlCommand("SELECT * FROM dbo.Tasks WHERE FK_Person_AssignedTO = @id", conn);
+            command.Parameters.Add(new SqlParameter("id", id));
+            using (SqlDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+
+                    Console.WriteLine(String.Format("Description \t | Created \t | Assigned To \t | Assigned By"));
+                    Console.WriteLine(String.Format("{0} \t | {1} \t | {2} \t | {3}",
+                        reader[0], reader[1], reader[2], reader[3]));
+
+                    Console.ReadLine();
+                }
+            }
+
 
         }
 
