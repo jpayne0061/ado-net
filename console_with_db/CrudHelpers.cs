@@ -48,6 +48,28 @@ namespace console_with_db
 
         }
 
+        public static void SendMessage(SqlConnection conn)
+        {
+            Console.WriteLine("Enter id of sender: ");
+            string senderId = Console.ReadLine();
+
+            Console.WriteLine("Enter id of recipient: ");
+            string receiverId = Console.ReadLine();
+
+            Console.WriteLine("Please enter message");
+            string body = Console.ReadLine();
+
+            SqlCommand insertCommand = new SqlCommand("INSERT INTO dbo.Messages (Body, Sender_Id, Receiver_Id) VALUES (@0, @1, @2)", conn);
+
+            insertCommand.Parameters.Add(new SqlParameter("0", body));
+            insertCommand.Parameters.Add(new SqlParameter("1", senderId));
+            insertCommand.Parameters.Add(new SqlParameter("2", receiverId));
+
+            insertCommand.ExecuteNonQuery();
+
+
+        }
+
         public static void InsertPerson(SqlConnection conn)
         {
             Person person = AddEditPerson();
@@ -159,6 +181,34 @@ namespace console_with_db
 
         }
 
+        public static void ListMessages(SqlConnection conn)
+        {
+            Console.WriteLine("Enter id of person you for whom you wish to list messages: ");
+            string id = Console.ReadLine();
+
+            string name = GetNameById(id);
+
+            SqlCommand command = new SqlCommand("SELECT * FROM dbo.Messages WHERE Sender_Id = @id", conn);
+            command.Parameters.Add(new SqlParameter("id", id));
+
+            using (SqlDataReader reader = command.ExecuteReader())
+            {
+                var mystery = reader.Read();
+
+                while (reader.Read())
+                {
+
+                    Console.WriteLine(String.Format("Body \t | Sender \t | Receiver \t "));
+                    Console.WriteLine(String.Format("{0} \t | {1} \t | {2} \t ",
+                        reader[1], name, GetNameById(reader[3].ToString())));
+
+                    
+                }
+            }
+
+            Console.ReadLine();
+        }
+
         public static void UpdatePerson(SqlConnection conn)
         {
             Console.WriteLine("Enter id of person you wish to update");
@@ -179,7 +229,29 @@ namespace console_with_db
         }
 
 
+        public static string GetNameById(string id)
+        {
+            string name = "";
 
+            using (SqlConnection conn = new SqlConnection())
+            {
+                conn.ConnectionString = "Server=JESS_COMPUTER\\SQLEXPRESS;Database=firstDB;Trusted_Connection=true";
+                conn.Open();
+
+                SqlCommand command = new SqlCommand("SELECT * FROM dbo.Person WHERE Id = @id", conn);
+                command.Parameters.Add(new SqlParameter("id", id));
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    reader.Read();
+                    name = reader[1].ToString();
+                }
+
+
+            }
+
+            return name;
+        }
 
     }
 }
