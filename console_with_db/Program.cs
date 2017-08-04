@@ -7,6 +7,14 @@ using System.Data.SqlClient;
 
 namespace console_with_db
 {
+    //write python script to scrape page and store each row
+    //store each row as json object
+    //use streamreader to store objects into sql server
+    
+
+
+
+
     class Program
     {
         static void Main(string[] args)
@@ -45,6 +53,18 @@ namespace console_with_db
                         break;
                     case 8:
                         CrudHelpers.SqlHelper(CrudHelpers.ListMessages);
+                        break;
+                    case 9:
+                        CrudHelpers.SqlHelper(CrudHelpers.ListSavingsOverN);
+                        break;
+                    case 10:
+                        CrudHelpers.SqlHelper(CrudHelpers.AssignPersonToOffender);
+                        break;
+                    case 11:
+                        CrudHelpers.SqlHelper(CrudHelpers.AssignPersonToOffender);
+                        break;
+                    case 12:
+                        CrudHelpers.SqlHelper(CrudHelpers.ListAssociatedOffenders);
                         break;
                 }
 

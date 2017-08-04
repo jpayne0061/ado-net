@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
-
+using System.Data;
 
 namespace console_with_db
 {
@@ -209,6 +209,29 @@ namespace console_with_db
             Console.ReadLine();
         }
 
+        public static void ListSavingsOverN(SqlConnection conn)
+        {
+            Console.WriteLine("Enter amount of savings to see popel with ovet that amount: ");
+            string num = Console.ReadLine();
+
+            SqlCommand cmd = new SqlCommand("ReturnPeopleSavingsOver500", conn);
+
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("@Save", SqlDbType.Float).Value = num;
+            
+
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+
+                    Console.WriteLine(reader[0]);
+                }
+            }
+            Console.ReadLine();
+
+        }
+
         public static void UpdatePerson(SqlConnection conn)
         {
             Console.WriteLine("Enter id of person you wish to update");
@@ -228,6 +251,48 @@ namespace console_with_db
 
         }
 
+        public static void AssignPersonToOffender(SqlConnection conn)
+        {
+
+            Console.WriteLine("Enter Id of offender to associate with person");
+            string offenderId = Console.ReadLine();
+
+            Console.WriteLine("Enter Id of person to assign to offender");
+            string personId = Console.ReadLine();
+
+            SqlCommand cmd = new SqlCommand("AssignPersonToOffender", conn);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@PersonId", SqlDbType.Int).Value = personId;
+            cmd.Parameters.Add("@OffenderId", SqlDbType.Int).Value = offenderId;
+
+            cmd.ExecuteNonQuery();
+
+        }
+
+        public static void ListAssociatedOffenders(SqlConnection conn)
+        {
+            Console.WriteLine("Enter Id of person to list their associated offenders");
+            string personId = Console.ReadLine();
+
+            SqlCommand cmd = new SqlCommand("ListAssociatedOffenders", conn);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@Person_Id", SqlDbType.Int).Value = personId;
+
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    Console.WriteLine("{0}, {1}", reader[0], reader[1]);
+                }
+                
+            }
+            Console.ReadLine();
+        }
+
+
+
 
         public static string GetNameById(string id)
         {
@@ -238,15 +303,18 @@ namespace console_with_db
                 conn.ConnectionString = "Server=JESS_COMPUTER\\SQLEXPRESS;Database=firstDB;Trusted_Connection=true";
                 conn.Open();
 
-                SqlCommand command = new SqlCommand("SELECT * FROM dbo.Person WHERE Id = @id", conn);
-                command.Parameters.Add(new SqlParameter("id", id));
+                SqlCommand command = new SqlCommand("GetNameById", conn);
+
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add("@Id", SqlDbType.Int).Value = id;
+
 
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     reader.Read();
-                    name = reader[1].ToString();
+                    name = reader[0].ToString();
                 }
-
 
             }
 
